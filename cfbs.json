@@ -1,0 +1,45 @@
+{
+  "name": "delete-files",
+  "description": "A simple CFEngine Build module for making sure files do not exist.",
+  "type": "module-repo",
+  "provides": {
+    "delete-files": {
+      "description": "This module ensures files are deleted if they exist.",
+      "tags": ["management"],
+      "version": "0.0.1",
+      "by": "https://github.com/nickanderson",
+      "repo": "https://github.com/nickanderson/cfengine-delete-files",
+      "input": [
+        {
+          "type": "list",
+          "variable": "files",
+          "namespace": "delete_files",
+          "bundle": "delete_files",
+          "label": "Files",
+          "subtype": [
+            {
+              "key": "path",
+              "type": "string",
+              "label": "Path",
+              "question": "Path to file"
+            },
+            {
+                "key": "why",
+                "type": "string",
+                "label": "Why",
+                "question": "Why does this file absence matter?",
+                "default": "Unknown"
+            }
+          ],
+          "while": "Delete another file?"
+        }
+      ],
+      "steps": [
+          "copy delete-files.cf services/cfbs/modules/delete-files/delete-files.cf",
+          "input delete-files/input.json def.json",
+          "bundles delete_files:delte_files",
+          "policy_files services/cfbs/modules/delete-files/delete-files.cf"
+      ]
+    }
+  }
+}

@@ -1,0 +1,21 @@
+body file control
+{
+  namespace => "delete_files";
+}
+bundle agent delete_files
+# @brief Ensure files do not exist
+# @var delete_files:delete_files.files - array of dicts having `path`, `mode` and `why` keys, e.g. `[{"path": "/etc/hosts.equiv",  "why": "Reccomended by CIS  CCE-84145-2."}]`
+#
+# **Notes:**
+# - Directories are not deleted
+{
+  vars:
+      # We pull the index from the files variable so that we can iterate over each file to manage it's mode
+      "i" slist => getindices( files );
+
+  files:
+      "$(files[$(i)][path])"
+      delete => default:tidy,
+      file_select => default:not_dir,
+      comment => "$(files[$(i)][why])";
+}

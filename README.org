@@ -1,0 +1,30 @@
+A simple module to delete specific files.
+
+* Configuration
+
+** Variables
+- =delete_files:delete_files.files= :: Array of dicts having =path= and =why= keys.
+
+  - =path= must be a regular expression matching the fully qualified path to a file
+  - =why=  should explain why the file being absent is important
+
+#+caption: Example Augments configuration
+#+begin_src json
+  {
+    "variables": {
+      "delete_files:delete_files.files": {
+        "value": [
+          {
+            "path": "/etc/hosts.equiv",
+            "why": "The file lists remote hosts and users that are trusted by the local system when using the rshd daemon and can allow unauthenticated access to the system. Reccomended by CIS  CCE-84145-2."
+          },
+         {
+            "path": "/home/.*/.rhosts",
+            "why": "The file lists remote hosts and users that are trusted by the local system when using the rshd daemon and can allow unauthenticated access to the system. Reccomended by CIS  CCE-84145-2."
+          }
+        ],
+        "comment": "Files and their required permissions"
+      }
+    }
+  }
+#+end_src
