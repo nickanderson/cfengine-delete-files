@@ -37,7 +37,7 @@
       "steps": [
           "copy delete-files.cf services/cfbs/modules/delete-files/delete-files.cf",
           "input delete-files/input.json def.json",
-          "bundles delete_files:delte_files",
+          "bundles delete_files:delete_files",
           "policy_files services/cfbs/modules/delete-files/delete-files.cf"
       ]
     }
