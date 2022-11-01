@@ -4,7 +4,7 @@ body file control
 }
 bundle agent delete_files
 # @brief Ensure files do not exist
-# @var delete_files:delete_files.files - array of dicts having `path`, `mode` and `why` keys, e.g. `[{"path": "/etc/hosts.equiv",  "why": "Reccomended by CIS  CCE-84145-2."}]`
+# @var delete_files:delete_files.files - array of dicts having `path` and `why` keys, e.g. `[{"path": "/etc/hosts.equiv",  "why": "Reccomended by CIS  CCE-84145-2."}]`
 #
 # **Notes:**
 # - Directories are not deleted
