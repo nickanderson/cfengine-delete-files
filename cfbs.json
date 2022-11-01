@@ -4,7 +4,7 @@
   "type": "module-repo",
   "provides": {
     "delete-files": {
-      "description": "This module ensures files are deleted if they exist.",
+        "description": "Allows you to specify a list of files you want deleted on hosts in your infrastructure. When this module is deployed as part of your policy set, every time CFEngine runs, it will check if those files exist, and delete them if they do.",
       "tags": ["management"],
       "version": "0.0.1",
       "by": "https://github.com/nickanderson",
@@ -27,11 +27,11 @@
                 "key": "why",
                 "type": "string",
                 "label": "Why",
-                "question": "Why does this file absence matter?",
+                "question": "Why should this file be deleted?",
                 "default": "Unknown"
             }
           ],
-          "while": "Delete another file?"
+          "while": "Specify another file you want deleted on your hosts?"
         }
       ],
       "steps": [
