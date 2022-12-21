@@ -6,7 +6,7 @@
     "delete-files": {
         "description": "Allows you to specify a list of files you want deleted on hosts in your infrastructure. When this module is deployed as part of your policy set, every time CFEngine runs, it will check if those files exist, and delete them if they do.",
       "tags": ["management"],
-      "version": "0.0.1",
+      "version": "1.0.0",
       "by": "https://github.com/nickanderson",
       "repo": "https://github.com/nickanderson/cfengine-delete-files",
       "input": [
