@@ -50,7 +50,7 @@ Here is an example of what it looks like in Mission Portal:
 
 After adding the file paths you want deleted (via input or JSON) you can touch the files and see that they get deleted:
 
-#+begin_src
+#+begin_example
 $ sudo touch /tmp/virus /home/ubuntu/.shosts /etc/cron.deny && sudo cf-agent -KI
     info: Deleted file '/tmp/virus'
     info: Deleted file '/home/ubuntu/.shosts'
