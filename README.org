@@ -55,4 +55,4 @@ $ sudo touch /tmp/virus /home/ubuntu/.shosts /etc/cron.deny && sudo cf-agent -KI
     info: Deleted file '/tmp/virus'
     info: Deleted file '/home/ubuntu/.shosts'
     info: Deleted file '/etc/cron.deny'
-#+end_src
+#+end_example
