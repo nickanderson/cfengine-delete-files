@@ -2,7 +2,18 @@ A simple module to delete specific files.
 
 It allows you to specify a list of files you want deleted on hosts in your infrastructure. When this module is deployed as part of your policy set, every time CFEngine runs, it will check if those files exist, and delete them if they do.
 
+*Recommendation:* Enforce the removal of files known to be malicious or indicating insecure configuration.
+Examples of such files are `~/.shosts` files, `/etc/cron.deny`, etc.
+
 * Configuration
+
+** Module input
+
+This module accepts input.
+Both the cfbs CLI and Mission Portal (3.21 and beyond) allow you to specify the files you want deleted.
+Here is an example of what it looks like in Mission Portal:
+
+[[https://raw.githubusercontent.com/nickanderson/cfengine-delete-files/main/delete-files-example-input-mp.png]]
 
 ** Variables
 - =delete_files:delete_files.files= :: Array of dicts having =path= and =why= keys.
@@ -12,25 +23,36 @@ It allows you to specify a list of files you want deleted on hosts in your infra
 
 #+caption: Example Augments configuration
 #+begin_src json
-  {
-    "variables": {
-      "delete_files:delete_files.files": {
-        "value": [
-          {
-            "path": "/etc/hosts.equiv",
-            "why": "The file lists remote hosts and users that are trusted by the local system when using the rshd daemon and can allow unauthenticated access to the system. Reccomended by CIS  CCE-84145-2."
-          },
-         {
-            "path": "/home/.*/.rhosts",
-            "why": "The file lists remote hosts and users that are trusted by the local system when using the rshd daemon and can allow unauthenticated access to the system. Reccomended by CIS  CCE-84145-2."
-          }
-          {
-            "path": "/root/.rhosts",
-            "why": "The file lists remote hosts and users that are trusted by the local system when using the rshd daemon and can allow unauthenticated access to the system. Reccomended by CIS  CCE-84145-2."
-          }
-        ],
-        "comment": "Files and their required permissions"
-      }
+{
+  "variables": {
+    "delete_files:delete_files.files": {
+      "value": [
+        {
+          "path": "/tmp/virus",
+          "why": "This is just an example, but if there is a file called virus there, you'd want it deleted!"
+        },
+        {
+          "path": "/home/.*/.shosts",
+          "why": "These files list remote hosts and users for host based authentication. Deletion recommended by CIS CCE-84145-2."
+        },
+        {
+          "path": "/etc/cron.deny",
+          "why": "Deny should be default, use an explicit allow list in /etc/cron.allow instead."
+        }
+      ],
+      "comment": "Files and their required permissions"
     }
   }
+}
 #+end_src
+
+** Testing that it works
+
+After adding the file paths you want deleted (via input or JSON) you can touch the files and see that they get deleted:
+
+#+begin_example
+$ sudo touch /tmp/virus /home/ubuntu/.shosts /etc/cron.deny && sudo cf-agent -KI
+    info: Deleted file '/tmp/virus'
+    info: Deleted file '/home/ubuntu/.shosts'
+    info: Deleted file '/etc/cron.deny'
+#+end_example
