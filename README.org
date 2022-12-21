@@ -34,7 +34,7 @@ Here is an example of what it looks like in Mission Portal:
          {
             "path": "/home/.*/.shosts",
             "why": "These files list remote hosts and users for host based authentication. Deletion recommended by CIS CCE-84145-2."
-          }
+          },
           {
             "path": "/etc/cron.deny",
             "why": "Deny should be default, use an explicit allow list in /etc/cron.allow instead."
