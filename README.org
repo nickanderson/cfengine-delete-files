@@ -23,25 +23,25 @@ Here is an example of what it looks like in Mission Portal:
 
 #+caption: Example Augments configuration
 #+begin_src json
-  {
-    "variables": {
-      "delete_files:delete_files.files": {
-        "value": [
-          {
-            "path": "/tmp/virus",
-            "why": "This is just an example, but if there is a file called virus there, you'd want it deleted!"
-          },
-         {
-            "path": "/home/.*/.shosts",
-            "why": "These files list remote hosts and users for host based authentication. Deletion recommended by CIS CCE-84145-2."
-          },
-          {
-            "path": "/etc/cron.deny",
-            "why": "Deny should be default, use an explicit allow list in /etc/cron.allow instead."
-          }
-        ],
-        "comment": "Files and their required permissions"
-      }
+{
+  "variables": {
+    "delete_files:delete_files.files": {
+      "value": [
+        {
+          "path": "/tmp/virus",
+          "why": "This is just an example, but if there is a file called virus there, you'd want it deleted!"
+        },
+        {
+          "path": "/home/.*/.shosts",
+          "why": "These files list remote hosts and users for host based authentication. Deletion recommended by CIS CCE-84145-2."
+        },
+        {
+          "path": "/etc/cron.deny",
+          "why": "Deny should be default, use an explicit allow list in /etc/cron.allow instead."
+        }
+      ],
+      "comment": "Files and their required permissions"
     }
   }
+}
 #+end_src
