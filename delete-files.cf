@@ -10,12 +10,83 @@ bundle agent delete_files
 # - Directories are not deleted
 {
   vars:
+      # This could return:
+      # - "none" if not defined
+      # - "data array" if defined as a data array
+      # - "data object" if defined as an object which would be completely invalid specification
+      # - "policy slist" if defined as a list via CMDB
+      # - "policy string" if defined as a string via CMDB
+      "_files_var_type"
+        string => type( "files", "true" );
+
       # We pull the index from the files variable so that we can iterate over each file to manage it's mode
       "i" slist => getindices( files );
 
+      # If files is 'data array', we need to probe each element of the array for
+      # it's type in order to differentiate between those using the original
+      # structure that requires the 'why' key to be provided as an explanation
+      "_type[$(i)]"
+        string => type( "files[$(i)]", true ),
+        if => strcmp( "$(_files_var_type)", "data array" );
+
+
   files:
+      # Delete files that were specified as a list
       "$(files[$(i)][path])"
-      delete => default:tidy,
-      file_select => default:not_dir,
-      comment => "$(files[$(i)][why])";
+        delete => default:tidy,
+        file_select => default:not_dir,
+        if => strcmp( "$(_type[$(i)])", "policy slist" ),
+        comment => "No reasoning provided";
+
+      # Delete files that were specified as a string inside of a data array
+      "$(files[$(i)])"
+        delete => default:tidy,
+        file_select => default:not_dir,
+        if => and( strcmp( "$(_files_var_type)", "data array" ),
+                   strcmp( "$(_type[$(i)])", "data string" ) ),
+        comment => "No reasoning provided";
+
+      # Delete files when it's defined as a singluar string
+      # This is very plausibly the case of a mis-configuration
+      "$(files)"
+        delete => default:tidy,
+        file_select => default:not_dir,
+        if => strcmp( "$(_files_var_type)", "policy string" ),
+        comment => "No reasoning provided";
+
+      # Delete files that were specified in the structured specification but lack the 'why' key
+      "$(files[$(i)][path])"
+        delete => default:tidy,
+        file_select => default:not_dir,
+        if => not( isvariable( "files[$(i)][why]") ),
+        comment => "No reasoning provided";
+
+      # Delete files that were specified in the structured specification having the 'why' key
+      "$(files[$(i)][path])"
+        delete => default:tidy,
+        file_select => default:not_dir,
+        comment => "$(files[$(i)][why])";
+
+
+  reports:
+      # Run with --define DEBUG or --define delete_files:DEBUG for just this place!
+    DEBUG::
+
+      "WARNING: '$(this.namespace):$(this.bundle).files' is a singluar string, plausibly mis-configured"
+        if => strcmp( "$(_files_var_type)", "policy string" );
+
+      "$(this.namespace):$(this.bundle).files type = '$(_files_var_type)'";
+
+      "$(this.namespace):$(this.bundle).files contains mixed elements: $(with)"
+        with => join( ", ", getvalues( "_type" ) ),
+        if => and( not( strcmp( "1", length( unique( getvalues( "_type" ) ) ) ) ),
+                   not( strcmp( "$(_files_var_type)", "data object")));
+
+      "$(this.namespace):$(this.bundle).files is improperly defined as 'data object' expect 'data array'"
+        if => strcmp( "$(_files_var_type)", "data object" );
+
+      "$(this.namespace):$(this.bundle).files:$(const.n)$(with)"
+        with => storejson( "files" ),
+        if => or( strcmp( "$(_files_var_type)", "data array" ),
+                  strcmp( "$(_files_var_type)", "data object" ));
 }
