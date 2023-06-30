@@ -21,38 +21,42 @@ Here is an example of what it looks like in Mission Portal:
   - =path= must be a regular expression matching the fully qualified path to a file
   - =why=  should explain why the file being absent is important
 
-#+caption: Example Augments configuration
-#+begin_src json
-{
-  "variables": {
-    "delete_files:delete_files.files": {
-      "value": [
-        {
-          "path": "/tmp/virus",
-          "why": "This is just an example, but if there is a file called virus there, you'd want it deleted!"
-        },
-        {
-          "path": "/home/.*/.shosts",
-          "why": "These files list remote hosts and users for host based authentication. Deletion recommended by CIS CCE-84145-2."
-        },
-        {
-          "path": "/etc/cron.deny",
-          "why": "Deny should be default, use an explicit allow list in /etc/cron.allow instead."
-        }
-      ],
-      "comment": "Files and their required permissions"
-    }
-  }
-}
-#+end_src
+  #+caption: Example Augments configuration
+  #+begin_src json
+     {
+       "variables": {
+         "delete_files:delete_files.files": {
+           "comment": "Files and their required permissions",
+           "value": [
+             {
+               "why": "The file lists remote hosts and users that are trusted by the local system when using the rshd daemon and can allow unauthenticated access to the system. Reccomended by CIS  CCE-84145-2.",
+               "path": "/etc/hosts.equiv"
+             },
+             {
+               "why": "The file lists remote hosts and users that are trusted by the local system when using the rshd daemon and can allow unauthenticated access to the system. Reccomended by CIS  CCE-84145-2.",
+               "path": "/home/.*/.rhosts"
+             },
+             {
+               "why": "The file lists remote hosts and users that are trusted by the local system when using the rshd daemon and can allow unauthenticated access to the system. Reccomended by CIS  CCE-84145-2.",
+               "path": "/root/.rhosts"
+             }
+           ]
+         }
+       }
+     }
+  #+end_src
 
-** Testing that it works
+  *Notes:*
+  - Running with class =delete_files:DEBUG= or =default:DEBUG= define results in DEBUG reports from policy.
+  - A list or array of files is also supported.
+  - An array with filenames and dicts having =path=  and =why= keys is supported.
+  - Absence of =why= key is supported.
+  - A simple string is supported (but as indicated by DEBUG reports, likely a mis-configuration).
+  - Directories are *not* deleted.
 
-After adding the file paths you want deleted (via input or JSON) you can touch the files and see that they get deleted:
+* History
 
-#+begin_example
-$ sudo touch /tmp/virus /home/ubuntu/.shosts /etc/cron.deny && sudo cf-agent -KI
-    info: Deleted file '/tmp/virus'
-    info: Deleted file '/home/ubuntu/.shosts'
-    info: Deleted file '/etc/cron.deny'
-#+end_example
+- DEBUG reports added in version 2.0.0.
+- Support for simple list specification added in version 2.0.0.
+- Support for mixed data array specification added in version 2.0.0.
+- Support for absence of =why= key added in version 2.0.0.
