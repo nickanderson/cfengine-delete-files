@@ -29,15 +29,15 @@ Here is an example of what it looks like in Mission Portal:
            "comment": "Files and their required permissions",
            "value": [
              {
-               "why": "The file lists remote hosts and users that are trusted by the local system when using the rshd daemon and can allow unauthenticated access to the system. Reccomended by CIS  CCE-84145-2.",
+               "why": "The file lists remote hosts and users that are trusted by the local system when using the rshd daemon and can allow unauthenticated access to the system. Recommended by CIS CCE-84145-2.",
                "path": "/etc/hosts.equiv"
              },
              {
-               "why": "The file lists remote hosts and users that are trusted by the local system when using the rshd daemon and can allow unauthenticated access to the system. Reccomended by CIS  CCE-84145-2.",
+               "why": "The file lists remote hosts and users that are trusted by the local system when using the rshd daemon and can allow unauthenticated access to the system. Recommended by CIS CCE-84145-2.",
                "path": "/home/.*/.rhosts"
              },
              {
-               "why": "The file lists remote hosts and users that are trusted by the local system when using the rshd daemon and can allow unauthenticated access to the system. Reccomended by CIS  CCE-84145-2.",
+               "why": "The file lists remote hosts and users that are trusted by the local system when using the rshd daemon and can allow unauthenticated access to the system. Recommended by CIS CCE-84145-2.",
                "path": "/root/.rhosts"
              }
            ]
